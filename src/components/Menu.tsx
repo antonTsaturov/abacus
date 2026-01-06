@@ -18,11 +18,12 @@ interface MenuItem {
 
 const Menu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { level, score } = useContext(AbacusContext)!;
+  const { level, setLevel, score, countSum } = useContext(AbacusContext)!;
   const [isAppearanceOpen, setIsAppearanceOpen] = useState(false);
   const { handleReset } = useReset();
   const { settings, resetSettings, updateSettings } = useSettings();
   const { startNewGame } = useNewGame();
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -32,9 +33,11 @@ const Menu: React.FC = () => {
   };
 
   const handleResetClick = () => {
+    level !== 0 && setLevel(0);
     handleReset();
     handleClose();
     resetSettings();
+    startNewGame();
   };
 
   const handleSettingsClick = () => {
@@ -42,17 +45,24 @@ const Menu: React.FC = () => {
   };
 
   const handleNewGame = () => {
-    const mode = 'ascent';
-    updateSettings({ mode });
-    startNewGame();
-    handleClose();
+    if (settings.mode !== 'ascent') {
+      const mode = 'ascent';
+      updateSettings({ mode });
+      level !== 0 && setLevel(0);
+      countSum > 0 && handleReset();
+      startNewGame();
+      handleClose();
+    }
   }
 
   const handleExitGame = () => {
-    const mode = 'common';
-    updateSettings({ mode });
-    handleReset();
-    startNewGame();
+    // Swith to training mode
+    if (settings.mode !== 'common') {
+      const mode = 'common';
+      updateSettings({ mode });
+      handleReset();
+      startNewGame();
+    }
   }
 
   const menuItems: MenuItem[] = [
@@ -119,8 +129,10 @@ const Menu: React.FC = () => {
         {/* Заголовок меню */}
         <div className="menu-header">
           <div className="menu-title">
-            <h2>Abacus</h2>
-            <p className="menu-subtitle">Тренажер счётов</p>
+            <img
+              className="menu-logo"
+              src="/abacus-logo.jpeg"
+            />
           </div>
           <button 
             className="menu-close"
@@ -139,7 +151,7 @@ const Menu: React.FC = () => {
           </div>
           <div className="info-item">
             <span className="info-label">Счет:</span>
-            <span className="info-value score">{score}</span>
+            <span className="info-value score">{`${settings.mode !== 'common' ? score : '0' }`}</span>
           </div>
           <div className="info-item">
             <span className="info-label">Режим:</span>
@@ -150,10 +162,10 @@ const Menu: React.FC = () => {
         {/* Навигация меню */}
         <nav className="menu-nav">
           <ul>
-            {menuItems.map((item) => (
+            {menuItems.map((item, index) => (
               <li key={item.id}>
                 <button 
-                  className="menu-item"
+                  className={`menu-item ${index + 1 === menuItems.length && 'last-item'}`}
                   onClick={() => {
                     item.onClick?.();
                   }}

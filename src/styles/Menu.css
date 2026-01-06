@@ -84,12 +84,16 @@
     left: 0;
   }
   
+  .menu-logo {
+    width: 100px;
+  }
+
   /* Заголовок меню */
   .menu-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 25px;
+    align-items: inherit;
+    padding: 25px 25px 0;
     background: rgba(255, 255, 255, 0.05);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
@@ -136,7 +140,8 @@
   .game-info {
     padding: 20px 25px;
     background: rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(206, 206, 206, 0.59);
+    box-shadow: 2px 10px 12px #cacaca2c;
   }
   
   .info-item {
@@ -158,7 +163,7 @@
   
   .info-value {
     color: white;
-    font-size: 16px;
+    /* font-size: 16px; */
     font-weight: 600;
   }
   
@@ -169,10 +174,11 @@
     font-size: 14px;
   }
   
-  .score {
+  .score, .mode {
     color: #7d7e7e;
     font-weight: 700;
-    text-shadow: 0 0 10px rgba(192, 194, 194, 0.5);
+    font-size: 14px;
+    text-shadow: 0 0 10px rgba(192, 194, 194, 0.21);
   }
   
   /* Навигация */
@@ -207,6 +213,10 @@
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+  }
+
+  .last-item {
+    margin-bottom: 86px;
   }
   
   .menu-item::before {
@@ -246,8 +256,12 @@
   /* Футер меню */
   .menu-footer {
     padding: 20px 25px;
-    background: rgba(0, 0, 0, 0.3);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.03);
+    position: absolute;
+    bottom: 0;
+    backdrop-filter: blur(10px);
+    width: 100%;
+    border-top: 1px solid #c5c2c2;
   }
   
   .footer-info {
@@ -379,6 +393,7 @@
       background: rgba(0, 0, 0, 0.05);
       border-color: rgba(0, 0, 0, 0.1);
       color: #4a5568;
+      margin-top: 5px;
     }
     
     .info-label {

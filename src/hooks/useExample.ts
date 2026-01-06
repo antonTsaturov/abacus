@@ -17,7 +17,7 @@ interface ExerciseExample {
 }
 
 export default function useExample(props: UseExampleProps) {
-    const {level, setLevel} = useContext(AbacusContext)!;
+    const {level, setLevel, score} = useContext(AbacusContext)!;
     const [example, setExample] = useState<ExerciseExample>();
     const [prevResult, setPrevResult] = useState<number | undefined>()
     const { settings } = useSettings();
@@ -25,7 +25,7 @@ export default function useExample(props: UseExampleProps) {
 
     useEffect(()=> {
         if (props.newGame) {
-            const exercise = settings.mode !== 'ascent' ? getExample(props.level) : getExample(props.level, prevResult);
+            const exercise = settings.mode !== 'ascent' || score === 0 ? getExample(props.level) : getExample(props.level, prevResult);
             setPrevResult(exercise.answer);
             setExample(exercise)
 

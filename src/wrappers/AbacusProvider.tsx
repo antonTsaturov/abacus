@@ -37,7 +37,8 @@ function AbacusProvider({ children }: { children: JSX.Element })  {
 
     useEffect(()=> {
         if (newGame)
-        setNewGame(false)
+        setNewGame(false);
+        setScore(0)
     }, [newGame])
 
     const updateRowValue = useCallback((rowNumber: number, value: number) => {

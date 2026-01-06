@@ -3,6 +3,7 @@ import '../styles/Exercise.css';
 import { AbacusContext } from '../wrappers/AbacusProvider';
 import { formatNumber } from '../utils/utils';
 import useExample from '../hooks/useExample';
+import { useSettings } from '../wrappers/SettingsProvider';
 //import useReset from '../hooks/useReset';
 //import { useSettings } from '../wrappers/SettingsProvider';
 
@@ -12,6 +13,7 @@ function Exercise() {
   const prevCountSumRef = useRef(countSum);
   const resultRef = useRef<HTMLDivElement>(null);
   const example  = useExample({ level, newGame });
+  const { settings } = useSettings();
   //const {handleReset} = useReset();
 
   useEffect(() => {
@@ -19,7 +21,8 @@ function Exercise() {
       const isCorrect = example && countSum === example.answer;
       if (isCorrect) {
         setIsSuccess(true);
-        setScore(countSum)
+        // Update count only in a game mode
+        settings.mode === 'ascent' && setScore(countSum)
         setTimeout(()=> {
           setNewGame(true);
           setIsSuccess(false);
