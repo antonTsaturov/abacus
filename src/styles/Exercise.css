@@ -1,0 +1,210 @@
+/* ================================
+   Exercise.css
+================================ */
+
+.exercise-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding: 20px;
+  perspective: 1000px;
+}
+
+/* ================================
+   Squares
+================================ */
+
+.square {
+  min-width: 120px;
+  height: 70px;
+  padding: 0 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #f1f3f6 45%,
+    #e3e7ee 100%
+  );
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a99;
+
+  position: relative;
+  overflow: hidden;
+
+  opacity: 0;
+  transform: translateY(16px) scale(0.96);
+  animation: squareEntrance 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    filter 0.25s ease;
+}
+
+/* Entrance delay */
+.square:nth-child(1) { animation-delay: 0.1s; }
+.square:nth-child(3) { animation-delay: 0.2s; }
+.square:nth-child(5) { animation-delay: 0.3s; }
+
+/* Hover */
+.square:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.22);
+}
+
+/* ================================
+   Square Entrance Animation
+================================ */
+
+@keyframes squareEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ================================
+   Content (numbers)
+================================ */
+
+.content {
+  opacity: 0;
+  animation: numberPopIn 0.45s ease-out forwards;
+  animation-delay: 0.25s;
+}
+
+@keyframes numberPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ================================
+   Symbols (+, =)
+================================ */
+
+.symbol {
+  font-size: 3rem;
+  font-weight: 300;
+  color: #6a6a6a;
+
+  min-width: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  opacity: 0;
+  transform: translateY(6px) scale(0.9);
+  animation: symbolFadeIn 0.6s ease-out forwards;
+}
+
+.symbol:nth-child(2) { animation-delay: 0.35s; }
+.symbol:nth-child(4) { animation-delay: 0.55s; }
+
+@keyframes symbolFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ================================
+   Success State
+================================ */
+
+.square.success {
+  background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+  border-color: #4CAF50;
+  color: #ffffff;
+  box-shadow: 0 0 30px rgba(76, 175, 80, 0.45);
+}
+
+/* Glow */
+.square.success::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 16px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.8),
+    rgba(46, 125, 50, 0.8)
+  );
+
+  filter: blur(18px);
+  opacity: 0.5;
+  z-index: -1;
+  pointer-events: none;
+
+  animation: glowPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+.square.success:hover {
+  box-shadow: 0 16px 40px rgba(76, 175, 80, 0.6);
+}
+
+/* ================================
+   Responsive
+================================ */
+
+@media (max-width: 870px) {
+  .exercise-container {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .square {
+    height: 50px;
+    font-size: 1.1rem;
+  }
+
+  .symbol {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .exercise-container {
+    scale: 0.7;
+  }
+}

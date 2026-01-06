@@ -1,0 +1,45 @@
+.reset-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  font-family: inherit;
+  max-height: 3rem;
+}
+
+.reset-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.reset-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(102, 126, 234, 0.4);
+}
+
+.reset-icon {
+  font-size: 18px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.reset-button:hover .reset-icon {
+  transform: rotate(180deg);
+}
+
+.reset-button:active .reset-icon {
+  transform: rotate(360deg);
+}
+

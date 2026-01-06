@@ -1,0 +1,410 @@
+/* Menu.css */
+
+/* Кнопка открытия меню */
+.menu-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
+  }
+  
+  .menu-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  }
+  
+  .menu-toggle.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-100%);
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    50% {
+      box-shadow: 0 4px 25px rgba(102, 126, 234, 0.8);
+    }
+  }
+  
+  /* Затемнение фона */
+  .menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Контейнер меню */
+  .menu-container {
+    position: fixed;
+    top: 0;
+    left: -400px;
+    width: 350px;
+    height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .menu-container.open {
+    left: 0;
+  }
+  
+  /* Заголовок меню */
+  .menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .menu-title h2 {
+    margin: 0;
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  .menu-subtitle {
+    margin: 5px 0 0;
+    color: #a0aec0;
+    font-size: 12px;
+    font-weight: 400;
+  }
+  
+  .menu-close {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  
+  .menu-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+  }
+  
+  /* Информация о игре */
+  .game-info {
+    padding: 20px 25px;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .info-item:last-child {
+    margin-bottom: 0;
+  }
+  
+  .info-label {
+    color: #a0aec0;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .info-value {
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .level-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+  }
+  
+  .score {
+    color: #7d7e7e;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(192, 194, 194, 0.5);
+  }
+  
+  /* Навигация */
+  .menu-nav {
+    flex: 1;
+    padding: 20px 0;
+    overflow-y: auto;
+  }
+  
+  .menu-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .menu-nav li {
+    margin: 5px 0;
+  }
+  
+  .menu-item {
+    width: 100%;
+    padding: 15px 25px;
+    background: transparent;
+    border: none;
+    color: #e2e8f0;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .menu-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .menu-item:hover::before {
+    left: 100%;
+  }
+  
+  .menu-item:hover {
+    background: #4d4d4d1f;
+    color: white;
+    padding-left: 30px;
+  }
+  
+  .menu-icon {
+    margin-right: 15px;
+    font-size: 18px;
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .menu-text {
+    flex: 1;
+  }
+  
+  /* Футер меню */
+  .menu-footer {
+    padding: 20px 25px;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .footer-info {
+    margin-bottom: 15px;
+  }
+  
+  .version {
+    color: #474747;
+    font-size: 12px;
+    margin: 0 0 5px;
+  }
+  
+  .copyright {
+    color: #474747;
+    font-size: 12px;
+    margin: 0;
+  }
+  
+  .theme-toggle {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .theme-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    color: white;
+    padding: 8px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .theme-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+  
+  /* Анимация для пунктов меню */
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .menu-nav li {
+    animation: slideIn 0.4s ease forwards;
+  }
+  
+  .menu-nav li:nth-child(1) { animation-delay: 0.1s; }
+  .menu-nav li:nth-child(2) { animation-delay: 0.15s; }
+  .menu-nav li:nth-child(3) { animation-delay: 0.2s; }
+  .menu-nav li:nth-child(4) { animation-delay: 0.25s; }
+  .menu-nav li:nth-child(5) { animation-delay: 0.3s; }
+  .menu-nav li:nth-child(6) { animation-delay: 0.35s; }
+  
+  /* Адаптивность */
+  @media (max-width: 480px) {
+    /* .menu-container {
+      width: 100%;
+      left: -100%;
+    } */
+    
+    .menu-header {
+      padding: 20px;
+    }
+    
+    .menu-title h2 {
+      font-size: 20px;
+    }
+    
+    .menu-item {
+      padding: 14px 20px;
+      font-size: 15px;
+    }
+    
+    .menu-toggle {
+      top: 15px;
+      left: 15px;
+      width: 45px;
+      height: 45px;
+    }
+  }
+  
+  /* Стили для скроллбара */
+  .menu-nav::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .menu-nav::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .menu-nav::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 2px;
+  }
+  
+  .menu-nav::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  }
+  
+  /* Поддержка темной темы */
+  @media (prefers-color-scheme: light) {
+    .menu-container {
+      background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+    }
+    
+    .menu-title h2 {
+      background: linear-gradient(90deg, #4f46e5, #7c3aed);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+    
+    .menu-subtitle {
+      color: #718096;
+    }
+    
+    .menu-close {
+      background: rgba(0, 0, 0, 0.05);
+      border-color: rgba(0, 0, 0, 0.1);
+      color: #4a5568;
+    }
+    
+    .info-label {
+      color: #718096;
+    }
+    
+    /* .info-value {
+      color: #f1f1f1;
+    } */
+    
+    .menu-item {
+      color: #4a5568;
+    }
+    
+    .menu-item:hover {
+      background: #4d4d4d1f;
+      color: #2d3748;
+    }
+    
+    .version, .copyright {
+      color: #474747;
+    }
+    
+    .theme-btn {
+      background: rgba(0, 0, 0, 0.05);
+      border-color: rgba(0, 0, 0, 0.1);
+      color: #4a5568;
+    }
+  }
