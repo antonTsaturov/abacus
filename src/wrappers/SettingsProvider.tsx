@@ -25,7 +25,7 @@ const defaultSettings: Settings = {
   showRowSums: true,
   dotDivider: false,
   mode: 'common',
-  showHelp: true,
+  showHelp: false,
   moveByClick: false
 };
 
