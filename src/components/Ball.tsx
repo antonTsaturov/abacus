@@ -30,7 +30,10 @@ function Ball({ position, onMouseDown, index, ballSize, isDragging, abacWidth, c
     setStartPos(position)
   }, [])
   
-  
+  // if (!abacWidth) {
+  //   return (<>{abacWidth}</>)
+  // }
+
   return (
     <div 
       className={`ball-wrapper ${isDragging ? 'dragging' : ''} ${( startPos !== undefined && position + 20 >= startPos + ballPathLength) ? 'on-right' : '' }`}

@@ -77,10 +77,11 @@
 .dot {
   aspect-ratio: 1;
   border-radius: 50px;
-  background: rgba(116, 3, 3, 0.62);
+  background: rgba(176, 1, 1, 0.62);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 4px;
   position: absolute;
+  margin-bottom: 1px;
 }
 
 @media (max-width: 480px) {

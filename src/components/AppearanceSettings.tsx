@@ -3,6 +3,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import '../styles/AppearanceSettings.css';
 import { useSettings } from '../wrappers/SettingsProvider';
 import { Settings } from '../wrappers/SettingsProvider';
+import useReset from '../hooks/useReset';
 
 interface AppearanceSettingsProps {
   isOpen: boolean;
@@ -13,21 +14,21 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({ isOpen, onClose
     const { settings, updateSettings } = useSettings();
     const currentTheme = settings.theme;
     const [selectedTheme, setSelectedTheme] = useState(currentTheme);
+    const {handleReset} = useReset();
 
     const handleThemeSelect = (theme: Settings["theme"]) => {
         setSelectedTheme(theme);
         updateSettings({ theme });
     };
 
-    const handleShowHideRowsums = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.checked;
-      updateSettings({ showRowSums: newValue });
-    };
+    const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const {name, checked} = e.target;
+      updateSettings({[name]: checked});
 
-    const handleDivider = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.checked;
-      updateSettings({ dotDivider: newValue });
-    };
+      if (name === 'moveByClick') {
+        handleReset()
+      }
+    }
 
     const handleCancel = () => {
         onClose();
@@ -41,7 +42,7 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({ isOpen, onClose
       
       <div className="appearance-settings">
         <div className="appearance-header">
-          <h3>Настройки внешнего вида</h3>
+          <h3>Настройки</h3>
           <button 
             className="appearance-close"
             onClick={handleCancel}
@@ -52,7 +53,8 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({ isOpen, onClose
         </div>
 
         <div className="appearance-content">
-          <div className="theme-section">           
+          <div className="theme-section">
+            <h4>Внешний вид</h4>       
             <div className="theme-options-grid">
               {/* Спокойная тема */}
               <div 
@@ -127,11 +129,12 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({ isOpen, onClose
             <label className="checkbox-row">
               <div className="checkbox-container">
                 <input
+                  name='showRowSums'
                   type="checkbox"
                   id="rowsums"
                   className="checkbox-input"
                   checked={settings.showRowSums}
-                  onChange={handleShowHideRowsums}
+                  onChange={handleCheckbox}
                 />
                 <div className="checkbox-custom" />
               </div>
@@ -149,11 +152,12 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({ isOpen, onClose
             <label className="checkbox-row">
               <div className="checkbox-container">
                 <input
+                  name="dotDivider"
                   type="checkbox"
                   id="rowsums"
                   className="checkbox-input"
                   checked={settings.dotDivider}
-                  onChange={handleDivider}
+                  onChange={handleCheckbox}
                 />
                 <div className="checkbox-custom" />
               </div>
@@ -163,6 +167,32 @@ const AppearanceSettings: React.FC<AppearanceSettingsProps> = ({ isOpen, onClose
             </label>
             <p className="checkbox-description">
               Разделитель для групп разрядов в виде точки
+            </p>
+          </div>
+          
+          <div className="theme-section">
+            <h4>Управление</h4>
+          </div>
+          {/* Чекбокс для типа управления */}
+          <div className="checkbox-section">
+            <label className="checkbox-row">
+              <div className="checkbox-container">
+                <input
+                  name="moveByClick"
+                  type="checkbox"
+                  id="rowsums"
+                  className="checkbox-input"
+                  checked={settings.moveByClick}
+                  onChange={handleCheckbox}
+                />
+                <div className="checkbox-custom" />
+              </div>
+              <span className="checkbox-label">
+                Двигать по клику
+              </span>
+            </label>
+            <p className="checkbox-description">
+              Перемещать костяшки без перетаскивания
             </p>
           </div>
         </div>

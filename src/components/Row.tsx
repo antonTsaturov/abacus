@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect, useMemo, JSX, useContext } from 'react'
+import { useState, useCallback, useRef, useEffect, JSX, useContext } from 'react'
 import Ball from './Ball'
 import '../styles/Row.css'
 import { BALL_COUNT, BALL_SIZES, MIN_SPACING, TRACK_WIDTH, DIGIT_VALUES } from '../const/const';
@@ -13,7 +13,7 @@ interface RowProps {
 }
 
 function Row({ rowNumber, color }: RowProps): JSX.Element  {
-  const { settings } = useSettings();
+  const { settings } = useSettings()!;
   const { initialPos, setInitialPos, registerResetFunction, updateRowValue, countSum } = useContext(AbacusContext)!;
   const windowWidth = useWindowWidth();
   const BALL_SIZE = windowWidth < 480 ? BALL_SIZES.mobile : windowWidth < 800 ?  BALL_SIZES.tablet : BALL_SIZES.desktop;
@@ -26,8 +26,9 @@ function Row({ rowNumber, color }: RowProps): JSX.Element  {
     for (let i = 0; i < BALL_COUNT; i++) {
       positions.push(startX + i * (BALL_SIZE + MIN_SPACING))
     }
-    return positions
+    return positions    
   })
+
 
   const resetBallsPos = useCallback(() => {
     if (initialPos) {
@@ -52,13 +53,31 @@ function Row({ rowNumber, color }: RowProps): JSX.Element  {
 
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
   const [lastMouseX, setLastMouseX] = useState<number>(0)
-  const trackRef = useRef<HTMLDivElement>(null)
   const ballPositionsRef = useRef<number[]>(ballPositions)
-  const abacWidth = useMemo(() => {
-    if (!trackRef.current) return 0;
-    return (trackRef.current.clientWidth - BALL_SIZE);
-  }, [trackRef?.current?.clientWidth]); 
 
+  const [abacWidth, setAbacWidth] = useState<number>(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!trackRef.current) return;
+    
+    const calculateWidth = () => {
+      const width = trackRef.current?.clientWidth || 0;
+      const calculatedWidth = width - BALL_SIZE;
+      setAbacWidth(calculatedWidth);
+    };
+    
+    // Первоначальный расчет
+    calculateWidth();
+    
+    // Подписка на изменение размеров окна
+    window.addEventListener('resize', calculateWidth);
+    
+    return () => {
+      window.removeEventListener('resize', calculateWidth);
+    };
+  }, [BALL_SIZE, windowWidth]);
+  
   const updateBallPosition = useCallback((index: number, newPos: number): void => {
     setBallPositions(prevPositions => {
       // Update ref with latest positions
@@ -83,116 +102,24 @@ function Row({ rowNumber, color }: RowProps): JSX.Element  {
       const movingRight = newPos > currentPos
       
       if (movingRight) {
-        // if (index === 9) {
-        //   newPositions[index] = newPos
-        // } else {
-        //   const rightNeighborPos = newPositions[index + 1];
-        //   const minAllowedPos = rightNeighborPos - minDistance
-
-        //   if (newPos <= minAllowedPos) {
-        //     // No overlap, safe to move
-        //     newPositions[index] = newPos
-        //   } else {
-        //     // Would overlap - need to push right neighbor(s)
-        //     const overlap = newPos - minAllowedPos;
-            
-
-        //     // Try to push balls to the right
-        //     let canPush = true;
-        //     let rightmostAffected = index + 1;
-
-        //     // Check if we can push all necessary balls
-        //     for (let i = index + 1; i <= 9; i++) {
-        //       const proposedPos = newPositions[i] + overlap
-        //       //console.log('proposedPos: ', proposedPos)
-        //       if (proposedPos > maxPos) {
-        //         // Can't push further left (hit boundary)
-        //         canPush = false
-        //         break
-        //       }
-              
-        //       // Check if this would cause overlap with ball to the right
-        //       if (i < 9) {
-        //         const rightOfThis = newPositions[i + 1]
-        //         console.log('R proposedPos: ', proposedPos, rightOfThis-minDistance)
-        //         if (proposedPos > rightOfThis - minDistance - 5) {
-        //           // Would overlap, need to push further
-        //           rightmostAffected = i + 1
-        //           continue
-        //         }
-        //       }
-              
-        //       // Found the right most ball we need to push
-        //       rightmostAffected = i
-        //       break
-        //     }
-            
-        //     console.log('rightmostAffected: ', rightmostAffected)
-
-        //     if (canPush) {
-        //       // Push all affected balls to the right
-        //       for (let i = BALL_COUNT - 1; i > index; i--) {
-        //         const leftNeighbor = i > 0 ? newPositions[i - 1] : null
-        //         if (leftNeighbor !== null) {
-        //           const required = leftNeighbor + minDistance
-        //           if (newPositions[i] < required) {
-        //             newPositions[i] = required
-        //           }
-        //         }
-        //       }
-        //       newPositions[index] = newPos
-        //     }            
-        //   }
-        // }
-  // Try to move the ball
-  newPositions[index] = newPos
-  
-  // Then fix any overlaps by pushing balls to the right
-  for (let i = index; i < BALL_COUNT - 1; i++) {
-    if (newPositions[i] > newPositions[i + 1] - minDistance) {
-      newPositions[i + 1] = newPositions[i] + minDistance
-    }
-  }
-  
-  // Check if last ball went out of bounds
-  if (newPositions[BALL_COUNT - 1] > maxPos) {
-    // If out of bounds, roll back and find the maximum possible position
-    newPositions[BALL_COUNT - 1] = maxPos
-    for (let i = BALL_COUNT - 2; i >= index; i--) {
-      newPositions[i] = newPositions[i + 1] - minDistance
-    }
-  }        //###########################
-        // Moving right
-        // newPositions[index] = newPos
+        // Try to move the ball
+        newPositions[index] = newPos
         
-        // // Push balls to the right to maintain minimum spacing
-        // for (let i = index + 1; i < BALL_COUNT; i++) {
-        //   const requiredPos = newPositions[i - 1] + minDistance
-        //   if (newPositions[i] < requiredPos) {
-        //     // Check if pushing would go off track
-        //     if (requiredPos + BALL_SIZE > trackWidth) {
-        //       // Can't push further, limit this ball's position
-        //       if (index + 1 < BALL_COUNT) {
-        //         const rightBallIndex = index + 1
-        //         const ballsOnRight = BALL_COUNT - (rightBallIndex + 1)
-        //         const abacWidth = trackWidth - BALL_SIZE
-        //         const maxRightPosition = abacWidth - (MIN_SPACING * ballsOnRight) - (BALL_SIZE * ballsOnRight)
-        //         // If the right ball is at its maximum position (has "on-right" class), prevent movement
-        //         if (prevPositions[rightBallIndex] > maxRightPosition) {
-        //           // Prevent this ball from moving
-        //           return prevPositions
-        //         }
-        //       }
-        //       const maxAllowedPos = newPositions[i] - minDistance
-        //       newPositions[index] = Math.min(newPos, maxAllowedPos)
-        //       break
-        //     }
-        //     newPositions[i] = requiredPos
-        //   } else {
-        //     // No more overlaps, we can stop
-        //     break
-        //   }
-        // }
+        // Then fix any overlaps by pushing balls to the right
+        for (let i = index; i < BALL_COUNT - 1; i++) {
+          if (newPositions[i] > newPositions[i + 1] - minDistance) {
+            newPositions[i + 1] = newPositions[i] + minDistance
+          }
+        }
+        
+        // Check if last ball went out of bounds
+        if (newPositions[BALL_COUNT - 1] > maxPos) {
+          // If out of bounds, roll back and find the maximum possible position
+          newPositions[BALL_COUNT - 1] = maxPos
+          for (let i = BALL_COUNT - 2; i >= index; i--) {
+            newPositions[i] = newPositions[i + 1] - minDistance
+          }
+        }
       } else {
         // Moving left
         if (index === 0) {
@@ -268,10 +195,58 @@ function Row({ rowNumber, color }: RowProps): JSX.Element  {
     })
   }, [])
 
+  const updateBallPositionByClick = useCallback((index: number): void => {
+    
+    //console.log('ballPositions: ', ballPositions)
+    const offset = trackRef.current &&  trackRef.current.clientWidth - BALL_SIZE - ballPositions[9];
+
+    setBallPositions(prevPositions => {
+
+      ballPositionsRef.current = prevPositions
+      const newPositions = [...prevPositions]
+
+      const clickedBallPos = prevPositions[index]
+      console.log(clickedBallPos, ballPositions)
+      if (offset && clickedBallPos === ballPositions[index] ) {//< clickedBallPos + offset
+        // Moving to the right
+        //console.log('to right')
+        for (let i = index; i <= 9; i++) {
+          
+          if (newPositions[i] !== ballPositions[i] + offset) {
+            newPositions[i] = newPositions[i] + offset;
+          }
+
+          if (i === 9) {
+            break;
+          }
+        }
+      } else {
+        // Moving to the left
+         //console.log('to left')
+        for (let i = index; i >= 0; i--) {
+          if (offset && newPositions[i] === ballPositions[i] + offset) {
+            newPositions[i] = newPositions[i] - offset;
+          }
+
+          if (i === 0) {
+            break;
+          }
+        }
+      }
+      return newPositions
+    })
+    handleRowCounter()
+  },[initialPos])
+
+
   const handleMouseDown = useCallback((index: number, clientX: number): void => {
-    setDraggingIndex(index)
-    setLastMouseX(clientX)
-  }, [])
+    if (settings.moveByClick === true) {
+      updateBallPositionByClick(index);
+    } else {
+      setLastMouseX(clientX);
+    }
+    setDraggingIndex(index);
+  }, [settings.moveByClick])
 
   const handleMouseMove = useCallback((clientX: number): void => {
     if (draggingIndex === null || !trackRef.current) return
@@ -291,13 +266,19 @@ function Row({ rowNumber, color }: RowProps): JSX.Element  {
     // Constrain to track bounds
     const constrainedPos = Math.max(0, Math.min(newPos, maxPos))
     
-    updateBallPosition(draggingIndex, constrainedPos)
+    if (!settings.moveByClick) {
+      updateBallPosition(draggingIndex, constrainedPos)
+    } 
+    
   }, [draggingIndex, lastMouseX, updateBallPosition])
+
 
   const handleMouseUp = useCallback((): void => {
     setDraggingIndex(null);
-    
-    // Пересчитываем счетчик прямо в обработчике
+    handleRowCounter();
+  }, [draggingIndex ]);
+
+  const handleRowCounter = useCallback(() => {
     const ballWrappers = trackRef?.current?.children as HTMLCollectionOf<Element>;
     if (ballWrappers) {
       const currentCount = Array.from(ballWrappers).reduce(
@@ -310,8 +291,7 @@ function Row({ rowNumber, color }: RowProps): JSX.Element  {
       // Отправляем значение в контекст
       updateRowValue(rowNumber, rowValue);
     }
-  }, [draggingIndex, trackRef?.current, rowNumber, updateRowValue]);
-
+  },[handleMouseUp])
 
   useEffect(() => {
     if (draggingIndex === null) return
@@ -369,7 +349,7 @@ function Row({ rowNumber, color }: RowProps): JSX.Element  {
       </div>
       
       {/* Правая часть со счетом */}
-      <span className='count' style={{opacity: `${!settings.showRowSums && 0}`}}>{formatNumber(count)}</span>
+      <span className='count' style={{ opacity: `${ settings.showRowSums ? 1 : 0 }` }}>{formatNumber(count)}</span>
     </div>
   );
 }

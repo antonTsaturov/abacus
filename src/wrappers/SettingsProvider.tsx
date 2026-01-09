@@ -4,11 +4,12 @@ import React, { createContext, useState, useEffect, ReactNode, useContext } from
 export interface Settings {
   theme: 'calm' | 'bright' | 'classic';
   soundEnabled: boolean;
-  animationsEnabled: boolean;
   language: string;
   showRowSums: boolean;
   dotDivider: boolean;
   mode: 'common' | 'ascent';
+  showHelp: boolean;
+  moveByClick: boolean;
 }
 
 interface SettingsContextType {
@@ -20,11 +21,12 @@ interface SettingsContextType {
 const defaultSettings: Settings = {
   theme: 'classic',
   soundEnabled: false,
-  animationsEnabled: true,
   language: 'ru',
   showRowSums: true,
   dotDivider: false,
-  mode: 'common'
+  mode: 'common',
+  showHelp: true,
+  moveByClick: false
 };
 
 export const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -67,7 +69,6 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
     setSettings(defaultSettings);
   };
   
-  console.log(settings)
   if (!isLoaded) {
     return <div>Загрузка настроек...</div>;
   }

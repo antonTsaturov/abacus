@@ -8,6 +8,7 @@ import { LEVEL, COLORS } from '../const/const';
 import NewExercise from './NewExerciseButton';
 import Menu from './Menu';
 import { useSettings } from '../wrappers/SettingsProvider';
+import Help from './Help';
 
 
 function Game() {
@@ -22,16 +23,19 @@ function Game() {
     <div style={{display:'contents'}}>
         <Menu />
         <Exercise />
-        {
-            rows.map((rowNumber, index) => (
+        {rows.map((rowNumber, index) => (
                 <Row rowNumber={rowNumber} key={rowNumber} color={ BALL_COLORS && BALL_COLORS[index % BALL_COLORS.length]}/>
-            ))
-        }
+        ))}
         <div className="buttons-block" style={{marginTop: '1rem'}}>
-            { settings.mode === 'common' && <LevelSelector /> }   
+            {settings.mode === 'common' && (
+                <>
+                  <LevelSelector />
+                  <NewExercise />
+                </>
+            )}               
             <ResetButton />
-            { settings.mode === 'common' && <NewExercise /> }
         </div>
+        <Help />
     </div>
   )
 }

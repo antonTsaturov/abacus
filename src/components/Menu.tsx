@@ -8,6 +8,7 @@ import AppearanceSettings from './AppearanceSettings';
 import useReset from '../hooks/useReset';
 import { useSettings } from '../wrappers/SettingsProvider';
 import useNewGame from '../hooks/useNewGame';
+import CloseButton from './CloseButton';
   
 interface MenuItem {
   id: string;
@@ -18,10 +19,10 @@ interface MenuItem {
 
 const Menu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { level, setLevel, score, countSum } = useContext(AbacusContext)!;
+  const { level, setLevel, score, countSum, setScore } = useContext(AbacusContext)!;
   const [isAppearanceOpen, setIsAppearanceOpen] = useState(false);
   const { handleReset } = useReset();
-  const { settings, resetSettings, updateSettings } = useSettings();
+  const { settings, resetSettings, updateSettings } = useSettings()!;
   const { startNewGame } = useNewGame();
 
   const toggleMenu = () => {
@@ -38,6 +39,7 @@ const Menu: React.FC = () => {
     handleClose();
     resetSettings();
     startNewGame();
+    setScore(0)
   };
 
   const handleSettingsClick = () => {
@@ -65,6 +67,15 @@ const Menu: React.FC = () => {
     }
   }
 
+  const handleHelp = () => {
+    if (settings.showHelp) {
+      updateSettings({ showHelp: false });
+    } else {
+      updateSettings({ showHelp: true });
+    }
+    handleClose();
+  }
+
   const menuItems: MenuItem[] = [
     {
       id: 'new_game',
@@ -88,14 +99,14 @@ const Menu: React.FC = () => {
       id: 'help',
       label: 'Помощь',
       icon: <QuestionCircleOutlined />,
-      onClick: () => console.log('Помощь')
+      onClick: handleHelp
     },
-    {
-      id: 'about',
-      label: 'О программе',
-      icon: <InfoCircleOutlined />,
-      onClick: () => console.log('О программе')
-    },
+    // {
+    //   id: 'about',
+    //   label: 'О программе',
+    //   icon: <InfoCircleOutlined />,
+    //   onClick: () => console.log('О программе')
+    // },
     {
       id: 'reset',
       label: 'Cброс',
@@ -134,13 +145,7 @@ const Menu: React.FC = () => {
               src="/abacus-logo.jpeg"
             />
           </div>
-          <button 
-            className="menu-close"
-            onClick={handleClose}
-            aria-label="Закрыть меню"
-          >
-            <CloseOutlined />
-          </button>
+          <CloseButton onClick={handleClose} />
         </div>
 
         {/* Информация о текущей игре */}
@@ -155,7 +160,7 @@ const Menu: React.FC = () => {
           </div>
           <div className="info-item">
             <span className="info-label">Режим:</span>
-            <span className="info-value score">{`${settings.mode === 'common' ? 'Тренажер' : 'Игра'}`}</span>
+            <span className="info-value mode">{`${settings.mode === 'common' ? 'Тренажер' : 'Игра'}`}</span>
           </div>
         </div>
 
